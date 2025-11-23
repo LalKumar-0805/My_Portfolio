@@ -1,9 +1,9 @@
-// Default content
+// Default content with YOUR information
 const defaultContent = {
     "hero-name": "DASARI LAL KUMAR",
-    "hero-title": "Front End Developer specializing in creating responsive web applications with modern technologies",
-    "about-text": "I'm a passionate Front-end developer with strong skills in HTML, CSS, JavaScript, and React. I specialize in creating responsive, user-friendly websites using modern technologies like Bootstrap, Python, and databases including SQL and MongoDB. As a fresher, I'm eager to apply my knowledge and learn new skills while building engaging web experiences. I enjoy staying updated with the latest web development trends and contributing to meaningful projects.",
-    "skills-list": "HTML,CSS,JavaScript,React,Bootstrap,Python,SQL,MongoDB",
+    "hero-title": "Frontend Developer",
+    "about-text": "Aspiring front-end developer with hands-on experience in building dynamic and responsive web applications. Proficient in HTML, CSS, JavaScript, and Bootstrap, with a strong foundation in Python, Java, and SQL. Seeking to leverage my skills and training to contribute effectively to challenging projects.",
+    "skills-list": "HTML,CSS,JavaScript,React,Bootstrap,Python,Java,SQL",
     "contact-email": "dasarilalkumar@gmail.com",
     "contact-phone": "8688876024",
     "contact-location": "Hyderabad",
@@ -88,12 +88,21 @@ let currentEditingProjId = null;
 
 // Initialize the portfolio
 function initPortfolio() {
+    console.log("Initializing portfolio...");
+    
     // Load saved content or use defaults
     Object.keys(defaultContent).forEach(key => {
         if (key === 'experience' || key === 'projects') {
             // Handle arrays separately
             const savedValue = localStorage.getItem(key);
-            const value = savedValue !== null ? JSON.parse(savedValue) : defaultContent[key];
+            let value;
+            
+            try {
+                value = savedValue !== null ? JSON.parse(savedValue) : defaultContent[key];
+            } catch (e) {
+                console.error(`Error parsing ${key}:`, e);
+                value = defaultContent[key];
+            }
             
             if (key === 'experience') {
                 renderExperience(value);
@@ -105,6 +114,8 @@ function initPortfolio() {
         } else {
             const savedValue = localStorage.getItem(key);
             const value = savedValue !== null ? savedValue : defaultContent[key];
+            
+            console.log(`Setting ${key}:`, value);
             
             // Update all elements with this data-id
             document.querySelectorAll(`[data-id="${key}"]`).forEach(element => {
@@ -123,6 +134,22 @@ function initPortfolio() {
                     editInput.value = value;
                 }
             }
+        }
+    });
+    
+    // Initialize the edit panel with current values
+    initializeEditPanel();
+}
+
+// Initialize edit panel with current values
+function initializeEditPanel() {
+    const basicInfoFields = ['hero-name', 'hero-title', 'about-text', 'skills-list', 'contact-email', 'contact-phone', 'contact-location'];
+    
+    basicInfoFields.forEach(field => {
+        const value = localStorage.getItem(field) || defaultContent[field];
+        const input = document.getElementById(`edit${field.split('-').map(part => part.charAt(0).toUpperCase() + part.slice(1)).join('')}`);
+        if (input) {
+            input.value = value;
         }
     });
 }
@@ -294,8 +321,15 @@ function generateResume() {
     const email = localStorage.getItem('contact-email') || defaultContent['contact-email'];
     const phone = localStorage.getItem('contact-phone') || defaultContent['contact-phone'];
     const location = localStorage.getItem('contact-location') || defaultContent['contact-location'];
-    const experiences = JSON.parse(localStorage.getItem('experience')) || defaultContent.experience;
-    const projects = JSON.parse(localStorage.getItem('projects')) || defaultContent.projects;
+    
+    let experiences, projects;
+    try {
+        experiences = JSON.parse(localStorage.getItem('experience')) || defaultContent.experience;
+        projects = JSON.parse(localStorage.getItem('projects')) || defaultContent.projects;
+    } catch (e) {
+        experiences = defaultContent.experience;
+        projects = defaultContent.projects;
+    }
     
     // Check if skills are empty
     const skillsArray = skills.split(',').filter(skill => skill.trim() !== '');
@@ -422,7 +456,13 @@ function addNewExperience() {
 
 // Edit existing experience
 function editExperience(id) {
-    const experiences = JSON.parse(localStorage.getItem('experience')) || defaultContent.experience;
+    let experiences;
+    try {
+        experiences = JSON.parse(localStorage.getItem('experience')) || defaultContent.experience;
+    } catch (e) {
+        experiences = defaultContent.experience;
+    }
+    
     const exp = experiences.find(e => e.id === id);
     
     if (exp) {
@@ -449,7 +489,12 @@ function saveExperienceItem() {
         return;
     }
     
-    const experiences = JSON.parse(localStorage.getItem('experience')) || defaultContent.experience;
+    let experiences;
+    try {
+        experiences = JSON.parse(localStorage.getItem('experience')) || defaultContent.experience;
+    } catch (e) {
+        experiences = defaultContent.experience;
+    }
     
     if (currentEditingExpId) {
         // Update existing experience
@@ -492,7 +537,13 @@ function saveExperienceItem() {
 // Delete experience
 function deleteExperience(id) {
     if (confirm('Are you sure you want to delete this experience?')) {
-        const experiences = JSON.parse(localStorage.getItem('experience')) || defaultContent.experience;
+        let experiences;
+        try {
+            experiences = JSON.parse(localStorage.getItem('experience')) || defaultContent.experience;
+        } catch (e) {
+            experiences = defaultContent.experience;
+        }
+        
         const filtered = experiences.filter(e => e.id !== id);
         
         // Save to localStorage
@@ -521,7 +572,13 @@ function addNewProject() {
 
 // Edit existing project
 function editProject(id) {
-    const projects = JSON.parse(localStorage.getItem('projects')) || defaultContent.projects;
+    let projects;
+    try {
+        projects = JSON.parse(localStorage.getItem('projects')) || defaultContent.projects;
+    } catch (e) {
+        projects = defaultContent.projects;
+    }
+    
     const project = projects.find(p => p.id === id);
     
     if (project) {
@@ -550,7 +607,13 @@ function saveProjectItem() {
         return;
     }
     
-    const projects = JSON.parse(localStorage.getItem('projects')) || defaultContent.projects;
+    let projects;
+    try {
+        projects = JSON.parse(localStorage.getItem('projects')) || defaultContent.projects;
+    } catch (e) {
+        projects = defaultContent.projects;
+    }
+    
     const colors = ['#3498db', '#e74c3c', '#2ecc71', '#f39c12', '#9b59b6', '#1abc9c'];
     
     if (currentEditingProjId) {
@@ -599,7 +662,13 @@ function saveProjectItem() {
 // Delete project
 function deleteProject(id) {
     if (confirm('Are you sure you want to delete this project?')) {
-        const projects = JSON.parse(localStorage.getItem('projects')) || defaultContent.projects;
+        let projects;
+        try {
+            projects = JSON.parse(localStorage.getItem('projects')) || defaultContent.projects;
+        } catch (e) {
+            projects = defaultContent.projects;
+        }
+        
         const filtered = projects.filter(p => p.id !== id);
         
         // Save to localStorage
@@ -629,11 +698,9 @@ function saveContentChanges() {
         
         editInputs.forEach(input => {
             const target = input.getAttribute('data-target');
-            const value = input.value;
+            const value = input.value.trim();
             
-            // Only save if value has changed
-            const currentValue = localStorage.getItem(target) || defaultContent[target];
-            if (value !== currentValue) {
+            if (value) {
                 // Save to localStorage
                 localStorage.setItem(target, value);
                 
@@ -653,7 +720,7 @@ function saveContentChanges() {
         if (hasChanges) {
             alert('Basic information saved successfully!');
         } else {
-            alert('No changes detected in basic information.');
+            alert('Please fill in all fields before saving.');
         }
     } else {
         alert('Please switch to the "Basic Info" tab to save basic information changes.');
@@ -693,74 +760,79 @@ function switchTab(tabName) {
 }
 
 // Event Listeners
-editToggle.addEventListener('click', toggleEditMode);
-editClose.addEventListener('click', toggleEditMode);
-saveChanges.addEventListener('click', saveContentChanges);
-resetContent.addEventListener('click', resetToDefault);
+document.addEventListener('DOMContentLoaded', function() {
+    console.log("DOM loaded, initializing portfolio...");
+    
+    // Initialize the portfolio
+    initPortfolio();
+    
+    // Set up event listeners
+    if (editToggle) editToggle.addEventListener('click', toggleEditMode);
+    if (editClose) editClose.addEventListener('click', toggleEditMode);
+    if (saveChanges) saveChanges.addEventListener('click', saveContentChanges);
+    if (resetContent) resetContent.addEventListener('click', resetToDefault);
 
-// Tab switching
-tabButtons.forEach(button => {
-    button.addEventListener('click', () => {
-        const tabName = button.getAttribute('data-tab');
-        switchTab(tabName);
+    // Tab switching
+    tabButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const tabName = button.getAttribute('data-tab');
+            switchTab(tabName);
+        });
     });
-});
 
-// Experience editing
-addExperience.addEventListener('click', addNewExperience);
-saveExperience.addEventListener('click', saveExperienceItem);
-cancelExperience.addEventListener('click', () => {
-    experienceForm.classList.remove('active');
-    currentEditingExpId = null;
-});
+    // Experience editing
+    if (addExperience) addExperience.addEventListener('click', addNewExperience);
+    if (saveExperience) saveExperience.addEventListener('click', saveExperienceItem);
+    if (cancelExperience) cancelExperience.addEventListener('click', () => {
+        experienceForm.classList.remove('active');
+        currentEditingExpId = null;
+    });
 
-// Project editing
-addProject.addEventListener('click', addNewProject);
-saveProject.addEventListener('click', saveProjectItem);
-cancelProject.addEventListener('click', () => {
-    projectForm.classList.remove('active');
-    currentEditingProjId = null;
-});
+    // Project editing
+    if (addProject) addProject.addEventListener('click', addNewProject);
+    if (saveProject) saveProject.addEventListener('click', saveProjectItem);
+    if (cancelProject) cancelProject.addEventListener('click', () => {
+        projectForm.classList.remove('active');
+        currentEditingProjId = null;
+    });
 
-// Resume functionality
-downloadResumeBtn.addEventListener('click', () => {
-    generateResume();
-    resumeModal.classList.add('active');
-});
+    // Resume functionality
+    if (downloadResumeBtn) downloadResumeBtn.addEventListener('click', () => {
+        generateResume();
+        resumeModal.classList.add('active');
+    });
 
-resumeClose.addEventListener('click', () => {
-    resumeModal.classList.remove('active');
-});
-
-downloadResume.addEventListener('click', downloadResumeAsPDF);
-printResume.addEventListener('click', printResumeDocument);
-
-// Close modal when clicking outside
-resumeModal.addEventListener('click', (e) => {
-    if (e.target === resumeModal) {
+    if (resumeClose) resumeClose.addEventListener('click', () => {
         resumeModal.classList.remove('active');
-    }
-});
+    });
 
-// Mobile menu toggle
-menuToggle.addEventListener('click', () => {
-    navLinks.classList.toggle('active');
-});
+    if (downloadResume) downloadResume.addEventListener('click', downloadResumeAsPDF);
+    if (printResume) printResume.addEventListener('click', printResumeDocument);
 
-// Close menu when clicking on a link
-const navItems = document.querySelectorAll('.nav-links a');
-navItems.forEach(item => {
-    item.addEventListener('click', () => {
-        navLinks.classList.remove('active');
+    // Close modal when clicking outside
+    if (resumeModal) resumeModal.addEventListener('click', (e) => {
+        if (e.target === resumeModal) {
+            resumeModal.classList.remove('active');
+        }
+    });
+
+    // Mobile menu toggle
+    if (menuToggle) menuToggle.addEventListener('click', () => {
+        navLinks.classList.toggle('active');
+    });
+
+    // Close menu when clicking on a link
+    const navItems = document.querySelectorAll('.nav-links a');
+    navItems.forEach(item => {
+        item.addEventListener('click', () => {
+            navLinks.classList.remove('active');
+        });
+    });
+
+    // Form submission
+    if (contactForm) contactForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        alert('Thank you for your message! I will get back to you soon.');
+        contactForm.reset();
     });
 });
-
-// Form submission
-contactForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    alert('Thank you for your message! I will get back to you soon.');
-    contactForm.reset();
-});
-
-// Initialize the portfolio when page loads
-document.addEventListener('DOMContentLoaded', initPortfolio);
