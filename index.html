@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Portfolio - Dynamic Editor</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Resume Modal -->
+    <div class="resume-modal" id="resumeModal">
+        <div class="resume-content">
+            <div class="resume-header">
+                <h2>My Resume</h2>
+                <button class="resume-close" id="resumeClose" title="Close resume">
+                    <i class="fas fa-times" aria-hidden="true"></i>
+                    <span class="sr-only">Close resume</span>
+                </button>
+            </div>
+            <div class="resume-body" id="resumeBody">
+                <!-- Resume content will be generated here -->
+            </div>
+            <div class="resume-actions">
+                <button class="btn" id="downloadResume" title="Download resume as PDF">
+                    <i class="fas fa-download" aria-hidden="true"></i> Download PDF
+                </button>
+                <button class="btn btn-outline" id="printResume" title="Print resume">
+                    <i class="fas fa-print" aria-hidden="true"></i> Print
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Toggle Button -->
+    <div class="edit-toggle" id="editToggle" role="button" tabindex="0" title="Open edit panel">
+        <i class="fas fa-edit" aria-hidden="true"></i>
+        <span class="sr-only">Edit portfolio</span>
+    </div>
+
+    <!-- Edit Panel -->
+    <div class="edit-panel" id="editPanel">
+        <div class="edit-close" id="editClose" role="button" tabindex="0" title="Close edit panel">
+            <i class="fas fa-times" aria-hidden="true"></i>
+            <span class="sr-only">Close edit panel</span>
+        </div>
+        <h3>Edit Portfolio Content</h3>
+        
+        <div class="tab-buttons">
+            <button class="tab-button active" data-tab="basic" title="Edit basic information">Basic Info</button>
+            <button class="tab-button" data-tab="experience" title="Edit work experience">Experience</button>
+            <button class="tab-button" data-tab="projects" title="Edit projects">Projects</button>
+        </div>
+        
+        <!-- Basic Info Tab -->
+        <div class="tab-content active" id="basic-tab">
+            <div class="edit-group">
+                <label for="editName">Your Name</label>
+                <input type="text" id="editName" class="edit-control" data-target="hero-name">
+            </div>
+            
+            <div class="edit-group">
+                <label for="editTitle">Professional Title</label>
+                <input type="text" id="editTitle" class="edit-control" data-target="hero-title">
+            </div>
+            
+            <div class="edit-group">
+                <label for="editAbout">About Text</label>
+                <textarea id="editAbout" class="edit-control" data-target="about-text"></textarea>
+            </div>
+            
+            <div class="edit-group">
+                <label for="editSkills">Skills (comma separated)</label>
+                <input type="text" id="editSkills" class="edit-control" data-target="skills-list">
+            </div>
+            
+            <div class="edit-group">
+                <label for="editEmail">Email Address</label>
+                <input type="email" id="editEmail" class="edit-control" data-target="contact-email">
+            </div>
+            
+            <div class="edit-group">
+                <label for="editPhone">Phone Number</label>
+                <input type="text" id="editPhone" class="edit-control" data-target="contact-phone">
+            </div>
+            
+            <div class="edit-group">
+                <label for="editLocation">Location</label>
+                <input type="text" id="editLocation" class="edit-control" data-target="contact-location">
+            </div>
+        </div>
+        
+        <!-- Experience Tab -->
+        <div class="tab-content" id="experience-tab">
+            <div class="edit-group">
+                <button class="btn btn-sm" id="addExperience" title="Add new work experience">Add Experience</button>
+            </div>
+            
+            <div class="item-list" id="experienceList">
+                <!-- Experience items will be added here dynamically -->
+            </div>
+            
+            <!-- Experience Form (hidden by default) -->
+            <div class="experience-form" id="experienceForm">
+                <div class="edit-group">
+                    <label for="expTitle">Job Title</label>
+                    <input type="text" id="expTitle" class="edit-control">
+                </div>
+                
+                <div class="edit-group">
+                    <label for="expCompany">Company</label>
+                    <input type="text" id="expCompany" class="edit-control">
+                </div>
+                
+                <div class="edit-group">
+                    <label for="expDate">Date Range</label>
+                    <input type="text" id="expDate" class="edit-control" placeholder="e.g., 2020 - Present">
+                </div>
+                
+                <div class="edit-group">
+                    <label for="expDescription">Description</label>
+                    <textarea id="expDescription" class="edit-control"></textarea>
+                </div>
+                
+                <div class="edit-actions">
+                    <button class="btn btn-sm" id="saveExperience" title="Save experience">Save</button>
+                    <button class="btn btn-sm btn-outline" id="cancelExperience" title="Cancel editing">Cancel</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Projects Tab -->
+        <div class="tab-content" id="projects-tab">
+            <div class="edit-group">
+                <button class="btn btn-sm" id="addProject" title="Add new project">Add Project</button>
+            </div>
+            
+            <div class="item-list" id="projectList">
+                <!-- Project items will be added here dynamically -->
+            </div>
+            
+            <!-- Project Form (hidden by default) -->
+            <div class="project-form" id="projectForm">
+                <div class="edit-group">
+                    <label for="projTitle">Project Title</label>
+                    <input type="text" id="projTitle" class="edit-control">
+                </div>
+                
+                <div class="edit-group">
+                    <label for="projDescription">Description</label>
+                    <textarea id="projDescription" class="edit-control"></textarea>
+                </div>
+                
+                <div class="edit-group">
+                    <label for="projTech">Technologies (comma separated)</label>
+                    <input type="text" id="projTech" class="edit-control">
+                </div>
+                
+                <div class="edit-group">
+                    <label for="projDemo">Live Demo URL</label>
+                    <input type="url" id="projDemo" class="edit-control" placeholder="https://your-project-demo.com">
+                </div>
+                
+                <div class="edit-group">
+                    <label for="projCode">GitHub Repository URL</label>
+                    <input type="url" id="projCode" class="edit-control" placeholder="https://github.com/yourusername/project">
+                </div>
+                
+                <div class="edit-actions">
+                    <button class="btn btn-sm" id="saveProject" title="Save project">Save</button>
+                    <button class="btn btn-sm btn-outline" id="cancelProject" title="Cancel editing">Cancel</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="edit-actions">
+            <button class="btn" id="saveChanges" title="Save all changes">Save All Changes</button>
+            <button class="btn btn-outline" id="resetContent" title="Reset to default content">Reset to Default</button>
+        </div>
+    </div>
+
+    <!-- Header & Navigation -->
+    <header>
+        <div class="container">
+            <nav class="navbar">
+                <a href="#" class="logo editable" data-id="logo-text">DASARI<span>LAL KUMAR</span></a>
+                <div class="menu-toggle" id="menuToggle" role="button" tabindex="0" title="Toggle navigation menu">
+                    <i class="fas fa-bars" aria-hidden="true"></i>
+                    <span class="sr-only">Menu</span>
+                </div>
+                <ul class="nav-links" id="navLinks">
+                    <li><a href="#home" title="Go to home section">Home</a></li>
+                    <li><a href="#about" title="Learn about me">About</a></li>
+                    <li><a href="#projects" title="View my projects">Projects</a></li>
+                    <li><a href="#experience" title="See my experience">Experience</a></li>
+                    <li><a href="#contact" title="Contact me">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="editable" data-id="hero-name">DASARI LAL KUMAR</h1>
+                <p class="editable" data-id="hero-title">Front End Developer specializing in creating responsive web applications with modern technologies</p>
+                <div class="hero-btns">
+                    <a href="#projects" class="btn" title="View my portfolio projects">View My Work</a>
+                    <a href="#contact" class="btn btn-outline" title="Contact me for opportunities">Get In Touch</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="section" id="about">
+        <div class="container">
+            <div class="section-title">
+                <h2>About Me</h2>
+                <p>Get to know me better</p>
+            </div>
+            <div class="about-content">
+                <div class="about-img">
+                    <div class="profile-image-placeholder">
+                        <i class="fas fa-user" aria-hidden="true"></i>
+                    </div>
+                </div>
+                <div class="about-text">
+                    <h3>Hello! I'm <span class="editable" data-id="hero-name">Dasari Lal Kumar</span></h3>
+                    <p class="editable" data-id="about-text">I'm a passionate Front-end developer with strong skills in HTML, CSS, JavaScript, and React. I specialize in creating responsive, user-friendly websites using modern technologies like Bootstrap, Python, and databases including SQL and MongoDB. As a fresher, I'm eager to apply my knowledge and learn new skills while building engaging web experiences. I enjoy staying updated with the latest web development trends and contributing to meaningful projects.</p>
+                    <div class="skills">
+                        <!-- Skills will be populated dynamically -->
+                    </div>
+                    <button class="btn" id="downloadResumeBtn" title="Download my resume">Download Resume</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section class="section projects" id="projects">
+        <div class="container">
+            <div class="section-title">
+                <h2>My Projects</h2>
+                <p>Some of my recent work</p>
+            </div>
+            <div class="projects-grid" id="projectsContainer">
+                <!-- Projects will be populated dynamically -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Experience Section -->
+    <section class="section" id="experience">
+        <div class="container">
+            <div class="section-title">
+                <h2>Work Experience</h2>
+                <p>My professional journey</p>
+            </div>
+            <div class="timeline" id="experienceContainer">
+                <!-- Experience will be populated dynamically -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="section" id="contact">
+        <div class="container">
+            <div class="section-title">
+                <h2>Contact Me</h2>
+                <p>Let's work together</p>
+            </div>
+            <div class="contact-content">
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
+                        </div>
+                        <div>
+                            <h3>Location</h3>
+                            <p class="editable" data-id="contact-location">Hyderabad</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-envelope" aria-hidden="true"></i>
+                        </div>
+                        <div>
+                            <h3>Email</h3>
+                            <p class="editable" data-id="contact-email">dasarilalkumar@gmail.com</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-phone" aria-hidden="true"></i>
+                        </div>
+                        <div>
+                            <h3>Phone</h3>
+                            <p class="editable" data-id="contact-phone">8688876024</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="contact-form">
+                    <form id="contactForm">
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="Your Name" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" class="form-control" placeholder="Your Email" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="Subject">
+                        </div>
+                        <div class="form-group">
+                            <textarea class="form-control" placeholder="Your Message" required></textarea>
+                        </div>
+                        <button type="submit" class="btn" title="Send your message">Send Message</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="logo editable" data-id="logo-text"><span>Dasari Lal Kumar</span></div>
+                <div class="social-links">
+                    <a href="#" class="social-link" title="Visit my LinkedIn profile"><i class="fab fa-linkedin-in" aria-hidden="true"></i><span class="sr-only">LinkedIn</span></a>
+                    <a href="#" class="social-link" title="Check my GitHub repositories"><i class="fab fa-github" aria-hidden="true"></i><span class="sr-only">GitHub</span></a>
+                    <a href="#" class="social-link" title="Follow me on Twitter"><i class="fab fa-twitter" aria-hidden="true"></i><span class="sr-only">Twitter</span></a>
+                    <a href="#" class="social-link" title="See my Instagram"><i class="fab fa-instagram" aria-hidden="true"></i><span class="sr-only">Instagram</span></a>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2025 <span class="editable" data-id="hero-name">Dasari Lal Kumar</span>. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
